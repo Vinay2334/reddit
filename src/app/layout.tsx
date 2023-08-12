@@ -1,6 +1,12 @@
-import './globals.css'
+'use client'
+//import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { ChakraProvider } from '@chakra-ui/react';
+import { CacheProvider } from '@chakra-ui/next-js';
+import { theme } from '@/chakra/theme';
+import Navbar from '../components/Navbar/Navbar';
+import {RecoilRoot} from "recoil";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +22,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <RecoilRoot>
+        <CacheProvider>
+        <ChakraProvider theme={theme}>
+        <Navbar/>
+        {children}
+        </ChakraProvider>
+        </CacheProvider>
+        </RecoilRoot>
+        </body>
     </html>
   )
 }
