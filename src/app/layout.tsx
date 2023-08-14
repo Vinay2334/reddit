@@ -1,12 +1,12 @@
-'use client'
 //import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ChakraProvider } from '@chakra-ui/react';
-import { CacheProvider } from '@chakra-ui/next-js';
-import { theme } from '@/chakra/theme';
-import Navbar from '../components/Navbar/Navbar';
-import {RecoilRoot} from "recoil";
+//  import { ChakraProvider } from '@chakra-ui/react';
+//  import { CacheProvider } from '@chakra-ui/next-js';
+//  import { theme } from '@/chakra/theme';
+//  import Navbar from '../components/Navbar/Navbar';
+//  import {RecoilRoot} from "recoil";
+import MainClientLayout from '@/components/Layout/MainClientLayout';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,14 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <RecoilRoot>
+        {/* <RecoilRoot>
         <CacheProvider>
         <ChakraProvider theme={theme}>
         <Navbar/>
         {children}
         </ChakraProvider>
         </CacheProvider>
-        </RecoilRoot>
+        </RecoilRoot> */}
+        <MainClientLayout>
+          {children}
+          </MainClientLayout>
         </body>
     </html>
   )
