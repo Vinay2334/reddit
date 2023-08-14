@@ -19,7 +19,6 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { auth } from "@/firebase/clientApp";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { authModalState } from "@/atoms/authModalAtom";
-import { communityState } from "@/atoms/communitiesAtom";
 
 type UserMenuProps = {
   user?: User | null;
@@ -27,12 +26,8 @@ type UserMenuProps = {
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
     const setAuthModalState = useSetRecoilState(authModalState);
-    const resetCommunityState = useResetRecoilState(communityState);
     const logout= async() => {
       await signOut(auth);
-      //clear community state
-      console.log("Logout");
-      resetCommunityState();
     }
 
   return (

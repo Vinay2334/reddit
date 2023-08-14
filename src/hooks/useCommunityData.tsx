@@ -8,16 +8,20 @@ import { auth, firestore } from "@/firebase/clientApp";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   writeBatch,
 } from "firebase/firestore";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 const useCommunityData = () => {
   const [user] = useAuthState(auth);
+  const router = useRouter();
+  const params = useParams();
   const [communityStateValue, setCommunityStateValue] =
     useRecoilState(communityState);
   const setAUthModalState = useSetRecoilState(authModalState);
@@ -53,6 +57,7 @@ const useCommunityData = () => {
       setCommunityStateValue((prev) => ({
         ...prev,
         mySnippets: snippets as CommunitySnippet[],
+        snippetsFetched: true,
       }));
     } catch (error: any) {
       console.log("GetMySnippets error", error);
@@ -69,6 +74,7 @@ const useCommunityData = () => {
       const newSnippet: CommunitySnippet = {
         communityId: communityData.id,
         imageURL: communityData.imageURL || "",
+        isModerator: user?.uid === communityData.creatorId,
       };
 
       batch.set(
@@ -123,10 +129,41 @@ const useCommunityData = () => {
     setLoading(false);
   };
 
+  const getCommunityData = async (communityId: string) => {
+    try {
+      const communityDocRef = doc(firestore, 'communities', communityId);
+      const communityDoc = await getDoc(communityDocRef);
+      setCommunityStateValue(prev => ({
+        ...prev,
+        currentCommunity: {
+          id: communityDoc.id,
+          ...communityDoc.data(),
+        } as Community
+      }))
+    } catch (error) {
+      console.log('getCommunityData error', error);
+    }
+  }
+
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [],
+        snippetsFetched: false,
+      }));
+      return;
+    }
     getMySnippets();
   }, [user]);
+
+  useEffect(() => {
+    const {communityId} = params;
+    if(communityId && !communityStateValue.currentCommunity){
+      getCommunityData(communityId as string);
+    }
+  }, [params, communityStateValue.currentCommunity])
+
   return {
     communityStateValue,
     onJoinOrLeaveCommunity,

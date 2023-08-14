@@ -54,7 +54,7 @@ const TextInputs: React.FC<TextInputsProps> = ({textInputs, onChange, handleCrea
           disabled={!textInputs.title}
           isLoading={loading}
         >
-          Posts
+          Post
         </Button>
       </Flex>
     </Stack>

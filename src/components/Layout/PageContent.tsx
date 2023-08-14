@@ -13,7 +13,7 @@ const PageContent: React.FC<PageContentProps> = ({ children }) => {
         width="95%"
         justify="center"
         maxWidth="860px"
-        border="1px solid green"
+        //border="1px solid green"
       >
         {/* LHS */}
         <Flex
